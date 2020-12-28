@@ -11,7 +11,7 @@ Contact: yihangjoe@foxmail.com
 ####============================ description ==============================####
 ## module 1
 Given the NAME column and output_dir, check whether name-folder exists (delete if exists),
-otherwise, create it. Copy the input csv file into working dir as TRIP log. Create
+otherwise, create it. Copy the input tsv file into working dir as TRIP log. Create
 processed_tables folder in working dir to store processed tables processed from
 repeatmaster output. Create barplots folder to store 4 types of barplots generated
 from proccessed tables. Create filtered_tables to store filtered tables from 
@@ -37,7 +37,7 @@ Given the filtration parameters to filter the processed tables in processed_tabl
 and generate the TR_candidates table and TR_candidates.dominant table.
 
 #================================== input =====================================
-1.input csv file:
+1.input tsv file:
 NAME	BIOPROJECT	ASSEMBLY
 CHAVOC	PRJNA212867	GCA_000708025.2
 ACACHL	PRJNA212877	GCA_000695815.1
@@ -59,5 +59,25 @@ ACACHL	PRJNA212877	GCA_000695815.1
 
 ####=======================================================================####
 """
+from module_1 import module1
+import os
+import sys
+import pandas as pd
 
+infile_dir=r"C:\CurrentProjects\Telomere\code\TRIP\TRIP_input.tsv"
+output_dir=r"C:\CurrentProjects\Telomere\code\TRIP"
+
+## read infile
+try:
+    infile_df=pd.read_csv(infile_dir,header=0,sep="\t")
+except Exception as e:
+    print("error: The input tsv file has issues.")
+    print(e)
+    sys.exit()
+
+## get the list of NAMEs
+name_list=list(infile_df.loc[:,'NAME'])
+
+## pass the infile_dir,name_list, output_dir, to module1
+module1(infile_dir,output_dir,name_list)
 
