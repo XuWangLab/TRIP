@@ -27,7 +27,6 @@ python3 current_script_dir/module_2.py name prj name_folder_dir ENA2URL_loc wget
 """
 import sys
 import os
-import pandas as pd
 
 name=sys.argv[1]
 prj=sys.argv[2]
@@ -40,7 +39,6 @@ ENA_record=str(name+"_"+prj+"_tsv.txt")
 url=str("\"https://www.ebi.ac.uk/ena/portal/api/filereport?accession="+prj+"&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true\"")
 wget_cmd=str("wget "+url+" -O "+name_folder_dir+"/"+ENA_record)
 os.system(wget_cmd)
-
 
 ## parse the FTP locations
 cp_cmd=str("cp -t "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc)

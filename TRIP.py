@@ -30,7 +30,8 @@ for each thread:
     Given the dir to repeatmaster (come with TRIP), process the FASTQ files in name-folder
     and generate intermediates into name-folder.
     ## module 5
-    Process the repeatmaster output tables and store into processed_tables.
+    Process the repeatmaster output tables and store processed tables into processed_tables.
+    Store barplots into barplots folder.
 
 ## module 6
 Given the filtration parameters to filter the processed tables in processed_tables
@@ -60,7 +61,18 @@ ACACHL	PRJNA212877	GCA_000695815.1
 system: Linux
 The structure of the folder should not change.
 "python3" should be abled to call by your system.
-"pandas" package should be installed in python3.
+needed python pacakges:
+    os
+    sys
+    pandas
+    inspect
+    numpy
+    matplotlib
+    requests
+    random
+    bs4
+    time
+    traceback
 ####=======================================================================####
 """
 import os
@@ -70,19 +82,35 @@ import inspect
 
 infile_dir=r"C:\CurrentProjects\Telomere\code\TRIP\TRIP_input.tsv"
 output_dir=r"C:\CurrentProjects\Telomere\code\TRIP"
-RepeatDetector_O="name_out"
-RepeatDetector_r=1
-RepeatDetector_R=25
-RepeatDetector_n=16
-RepeatDetector_I="*gz"
-RepeatSummary_O="name.tsv"
-RepeatSummary_I="name_out.repeat"
 
 current_script_dir=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 ENA2URL_loc=str(current_script_dir+"/ENA2URL.sh")
 wget_loc=str(current_script_dir+"/wget.sh")
 RepeatDetector_loc=str(current_script_dir+"/RepeatDetector_v2")
 RepeatSummary_loc=str(current_script_dir+"/RepeatSummary_v2")
+RepeatDetector_r=1
+RepeatDetector_R=25
+RepeatDetector_n=16
+CRPG_loc=str(current_script_dir+"/Cal_Repeats_Per_Genome_and_Percent_of_Len_Linux.py")
+rpt_reads_num=12000
+total_reads_num=0
+repeats_num=0
+total_bases_num=0
+unit_len=5
+eff_read_len=0
+genome_size=0
+avg_genome_cov=10
+repeats_total_len=0
+repeats_per_read=0
+reads_per_genome=0
+repeats_per_genome=0
+repeats_per_million_reads=0
+repeats_len_per_genome=0
+repeats_len_per_million_reads=4 ##Kb
+percent_repeats_len_per_read=0.5
+percent_repeats_len_per_genome=0
+percent_repeat_unit_in_seqs=0
+best_candidate_enrichment=3
 
 ## read infile
 try:
@@ -116,8 +144,38 @@ for name_prj_ass in name_prj_ass_list:
     module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
     os.system(module_3_cmd)
     ## module 4 command
+    RepeatDetector_O="name_out"
+    RepeatDetector_I="*gz"
+    RepeatSummary_O="name_repeatsummary.tsv"
+    RepeatSummary_I="name_out.repeat"
     module_4_cmd=str("python3 "+current_script_dir+"/module_4.py "+RepeatDetector_loc\
                      +" "+RepeatSummary_loc+" "+RepeatDetector_O+" "+RepeatDetector_r\
                      +" "+RepeatDetector_R+" "+RepeatDetector_n+" "+RepeatDetector_I\
                      +" "+RepeatSummary_O+" "+RepeatSummary_I)
-        
+    ## module 5 command
+    module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
+    os.system(module_5_cmd)
+
+## module 6 command
+filtered_tables_dir=str(output_dir+"/"+"filtered_tables")
+module_6_cmd=str("python3 "+current_script_dir+"/module_6.py "+filtered_tables_dir+" "+\
+                 rpt_reads_num+" "+\
+                total_reads_num+" "+\
+                repeats_num+" "+\
+                total_bases_num+" "+\
+                unit_len+" "+\
+                eff_read_len+" "+\
+                genome_size+" "+\
+                avg_genome_cov+" "+\
+                repeats_total_len+" "+\
+                repeats_per_read+" "+\
+                reads_per_genome+" "+\
+                repeats_per_genome+" "+\
+                repeats_per_million_reads+" "+\
+                repeats_len_per_genome+" "+\
+                repeats_len_per_million_reads+" "+\
+                percent_repeats_len_per_read+" "+\
+                percent_repeats_len_per_genome+" "+\
+                percent_repeat_unit_in_seqs+" "+\
+                best_candidate_enrichment)
+
