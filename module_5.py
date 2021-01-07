@@ -68,13 +68,14 @@ CRPG_input_dict={'code':[name],
 
 CRPG_input_df=pd.DataFrame.from_dict(CRPG_input_dict)
 ## write CRPG_input.tsv
-CRPG_input_df.to_csv("CRPG_input.tsv",sep="\t",index=None)
 CRPG_input_loc=str(name_folder_dir+"/"+"CRPG_input.tsv")
+CRPG_input_df.to_csv(CRPG_input_loc,sep="\t",index=None)
 
 
 ## parse the CRPG_input.tsv to Cal_Repeats_Per_Genome_and_Percent_of_Len_Linux.py
 filtered_tables_dir=str(output_dir+"/"+"filtered_tables")
 barplots_dir=str(output_dir+"/"+"barplots")
 CRPG_cmd=str('python3 '+CRPG_loc+" "+name_folder_dir+" "+CRPG_input_loc+" "+filtered_tables_dir+" "+barplots_dir)
+print("module 5: ",CRPG_cmd)
 os.system(CRPG_cmd)
 

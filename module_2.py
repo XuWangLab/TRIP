@@ -27,6 +27,8 @@ python3 current_script_dir/module_2.py name prj name_folder_dir ENA2URL_loc wget
 """
 import sys
 import os
+import time
+import random
 
 name=sys.argv[1]
 prj=sys.argv[2]
@@ -36,6 +38,7 @@ wget_loc=sys.argv[5]
 
 ## download records from ENA
 ENA_record=str(name+"_"+prj+"_tsv.txt")
+print("module 2: downloading ",ENA_record)
 url=str("\"https://www.ebi.ac.uk/ena/portal/api/filereport?accession="+prj+"&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true\"")
 wget_cmd=str("wget "+url+" -O "+name_folder_dir+"/"+ENA_record)
 os.system(wget_cmd)
@@ -43,12 +46,16 @@ os.system(wget_cmd)
 ## parse the FTP locations
 cp_cmd=str("cp -t "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc)
 os.system(cp_cmd)
+print(cp_cmd)
 ## will generate url file under name-folder
 parse_cmd=str("bash "+name_folder_dir+"/ENA2URL.sh")
 os.system(parse_cmd)
+print(parse_cmd)
 
 ## Download the FASTQ files to the name-folder
 wget_cmd=str("bash "+name_folder_dir+"/wget.sh")
+print(wget_cmd)
+time.sleep(random.choice(range(1,10))) ## in case IP restriction
 os.system(wget_cmd)
 
 

@@ -33,15 +33,17 @@ import sys
 assembly=sys.argv[1]
 name_folder_dir=sys.argv[2]
 
-time.sleep(random.choice(range(1,10))) ## in case IP restriction
+time.sleep(random.choice(range(1,99))) ## in case IP restriction
 
 ## scrap the genome_size=Total ungapped length
 url=str("https://www.ncbi.nlm.nih.gov/assembly/"+assembly+"/")
+print("module 3: requesting ",url)
 html=requests.get(url)
 bf=BeautifulSoup(html.text)
 len_str=bf.find("td",string="Total ungapped length").next_sibling.text
 len_int=int(len_str.replace(",",""))
 
 ## write the genome size
+print("module 3: writing genome_size.")
 with open(str(name_folder_dir+"/genome_size"),'w') as f:
-    f.write(len_int)
+    f.write(str(len_int))

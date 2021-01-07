@@ -50,7 +50,7 @@ def format_output(data,eff_read_len,num_reads,avg_genome_cov,genome_size,output_
 
 
     ## calculated variables
-    #repeats_total_len------------------> the total length of repeats
+    #repeats_len------------------> the length of repeats
     #repeats_per_read-------------------> average number of repeats per read in repeats containing reads
     #reads_per_genome-------------------> repeat_containing_reads_num per genome
     #repeats_per_genome-----------------> number of repeats per haploid genome
@@ -60,7 +60,7 @@ def format_output(data,eff_read_len,num_reads,avg_genome_cov,genome_size,output_
     #percent_repeats_len_per_read-------> average percentage of perfect repetitive unit region in repeat containing reads
     #percent_repeats_len_per_genome-----> average percentage of total repeats length in haploid genome
     #percent_repeat_unit_in_sequences --> average percentage of repeat units in all sequencing reads
-    repeats_total_len=repeats*unit_len.tolist()
+    repeats_len=repeats*unit_len.tolist()
     ## repeats_per_read=list(map(int,repeats/reads))
     repeats_per_read=list(repeats/reads)
     reads_per_genome=list(reads/avg_genome_cov)
@@ -87,7 +87,7 @@ def format_output(data,eff_read_len,num_reads,avg_genome_cov,genome_size,output_
                          'genome_size':[genome_size for x in range(length)],\
                          'eff_read_len':[eff_read_len for x in range(length)],\
                          'num_reads':[num_reads for x in range(length)],\
-                         'repeats_total_len':repeats_total_len,\
+                         'repeats_len':repeats_len,\
                          'repeats_per_read':repeats_per_read,\
                          'reads_per_genome':reads_per_genome,\
                          'repeats_per_genome':repeats_per_genome,\

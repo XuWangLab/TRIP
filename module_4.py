@@ -43,7 +43,9 @@ RepeatSummary_I=sys.argv[9]
 RepeatDetector_cmd=str(RepeatDetector_loc+" "+RepeatDetector_O+" "+RepeatDetector_I\
                        +" -r "+RepeatDetector_r+" -R "+RepeatDetector_R+" -n "+\
                        RepeatDetector_n)
+print("module 4: ",RepeatDetector_cmd)
 os.system(RepeatDetector_cmd)
 
 RepeatSummary_cmd=str(RepeatSummary_loc+" "+RepeatSummary_O+" "+RepeatSummary_I)
+print("module 4: ",RepeatSummary_cmd)
 os.system(RepeatSummary_cmd)
