@@ -30,29 +30,28 @@ import sys
 
 
 filtered_tables_dir=sys.argv[1]
-rpt_reads_num_filter=sys.argv[2]
-total_reads_num_filter=sys.argv[3]
-repeats_num_filter=sys.argv[4]
-unit_len_filter=sys.argv[5]
-eff_read_len_filter=sys.argv[6]
-genome_size_filter=sys.argv[7]
-avg_genome_cov_filter=sys.argv[8]
-repeats_len_filter=sys.argv[9]
-repeats_per_read_filter=sys.argv[10]
-reads_per_genome_filter=sys.argv[11]
-repeats_per_genome_filter=sys.argv[12]
-repeats_per_million_reads_filter=sys.argv[13]
-repeats_len_per_genome_filter=sys.argv[14]
-repeats_len_per_million_reads_filter=sys.argv[15]
-percent_repeats_len_per_read_filter=sys.argv[16]
-percent_repeats_len_per_genome_filter=sys.argv[17]
-percent_repeat_unit_in_seqs_filter=sys.argv[18]
-best_candidate_enrichment=sys.argv[19]
-max_qualified_num_filter=sys.argv[20]
+rpt_reads_num_filter=float(sys.argv[2])
+total_reads_num_filter=float(sys.argv[3])
+repeats_num_filter=float(sys.argv[4])
+unit_len_filter=float(sys.argv[5])
+eff_read_len_filter=float(sys.argv[6])
+genome_size_filter=float(sys.argv[7])
+avg_genome_cov_filter=float(sys.argv[8])
+repeats_len_filter=float(sys.argv[9])
+repeats_per_read_filter=float(sys.argv[10])
+reads_per_genome_filter=float(sys.argv[11])
+repeats_per_genome_filter=float(sys.argv[12])
+repeats_per_million_reads_filter=float(sys.argv[13])
+repeats_len_per_genome_filter=float(sys.argv[14])
+repeats_len_per_million_reads_filter=float(sys.argv[15])
+percent_repeats_len_per_read_filter=float(sys.argv[16])
+percent_repeats_len_per_genome_filter=float(sys.argv[17])
+percent_repeat_unit_in_seqs_filter=float(sys.argv[18])
+best_candidate_enrichment=float(sys.argv[19])
+max_qualified_num_filter=float(sys.argv[20])
 TR_candidates_dir=sys.argv[21]
 
 
-filtered_tables_dir=r"C:\CurrentProjects\Telomere\2020_telomere_publication_self\Data_S7_TRIP_upstream_output_tables"
 processed_tables=filtered_tables_dir.rstrip("/").rstrip("\\")
 table_names=os.listdir(filtered_tables_dir)
 

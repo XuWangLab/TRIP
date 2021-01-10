@@ -27,7 +27,7 @@ RepeatSummary name_25nt.tsv name_out.repeat
 """
 import sys
 import os
-import pandas as pd
+
 
 RepeatDetector_loc=sys.argv[1]
 RepeatSummary_loc=sys.argv[2]
@@ -35,17 +35,20 @@ RepeatDetector_O=sys.argv[3]
 RepeatDetector_r=sys.argv[4]
 RepeatDetector_R=sys.argv[5]
 RepeatDetector_n=sys.argv[6]
-RepeatDetector_I=sys.argv[7]
-RepeatSummary_O=sys.argv[8]
-RepeatSummary_I=sys.argv[9]
+RepeatDetector_I=" ".join(sys.argv[7:-2])
+RepeatSummary_O=sys.argv[-2]
+RepeatSummary_I=sys.argv[-1]
 
 
 RepeatDetector_cmd=str(RepeatDetector_loc+" "+RepeatDetector_O+" "+RepeatDetector_I\
                        +" -r "+RepeatDetector_r+" -R "+RepeatDetector_R+" -n "+\
                        RepeatDetector_n)
 print("module 4: ",RepeatDetector_cmd)
-os.system(RepeatDetector_cmd)
+#os.system(RepeatDetector_cmd)
 
+print("RepeatSummary_loc: ",RepeatSummary_loc)
+print("RepeatSummary_O: ",RepeatSummary_O)
+print("RepeatSummary_I: ",RepeatSummary_I)
 RepeatSummary_cmd=str(RepeatSummary_loc+" "+RepeatSummary_O+" "+RepeatSummary_I)
 print("module 4: ",RepeatSummary_cmd)
 os.system(RepeatSummary_cmd)

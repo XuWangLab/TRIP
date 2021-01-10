@@ -29,7 +29,7 @@ for each thread:
     Given the dir to repeatmaster (come with TRIP), process the FASTQ files in name-folder
     and generate intermediates into name-folder.
     ## module 5
-    Process the repeatmaster output tables and store processed tables into processed_tables.
+    Process the repeatmaster output tables and store filtered tables into filtered_tables.
     Store barplots into barplots folder.
 
 ## module 6
@@ -83,6 +83,7 @@ import sys
 import pandas as pd
 import inspect
 import time
+from glob import glob
 ##from multiprocessing import Process
 from multiprocessing import Pool
 
@@ -94,34 +95,34 @@ output_dir=sys.argv[2]
 
 current_script_dir=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 ## str to int
-process_num=32
+process_num=str(32)
 ENA2URL_loc=str(current_script_dir+"/ENA2URL.sh")
 wget_loc=str(current_script_dir+"/wget.sh")
 RepeatDetector_loc=str(current_script_dir+"/RepeatDetector_v2")
 RepeatSummary_loc=str(current_script_dir+"/RepeatSummary_v2")
-RepeatDetector_r=1
-RepeatDetector_R=25
-RepeatDetector_n=16
+RepeatDetector_r=str(1)
+RepeatDetector_R=str(25)
+RepeatDetector_n=str(16)
 CRPG_loc=str(current_script_dir+"/cal_repeats_per_genome_and_percent_of_len_linux.py")
-rpt_reads_num=12000
-total_reads_num=0
-repeats_num=0
-unit_len=5
-eff_read_len=0
-genome_size=0
-avg_genome_cov=10
-repeats_len=0
-repeats_per_read=0
-reads_per_genome=0
-repeats_per_genome=0
-repeats_per_million_reads=0
-repeats_len_per_genome=0
-repeats_len_per_million_reads=4 ##Kb
-percent_repeats_len_per_read=0.5
-percent_repeats_len_per_genome=0
-percent_repeat_unit_in_seqs=0
-best_candidate_enrichment=3
-max_qualified_num=999
+rpt_reads_num=str(12000)
+total_reads_num=str(0)
+repeats_num=str(0)
+unit_len=str(5)
+eff_read_len=str(0)
+genome_size=str(0)
+avg_genome_cov=str(10)
+repeats_len=str(0)
+repeats_per_read=str(0)
+reads_per_genome=str(0)
+repeats_per_genome=str(0)
+repeats_per_million_reads=str(0)
+repeats_len_per_genome=str(0)
+repeats_len_per_million_reads=str(4) ##Kb
+percent_repeats_len_per_read=str(0.5)
+percent_repeats_len_per_genome=str(0)
+percent_repeat_unit_in_seqs=str(0)
+best_candidate_enrichment=str(3)
+max_qualified_num=str(999)
 FOT2X_loc=str(current_script_dir+"/filter_output_tables_to_xlsx.py")
 
 
@@ -151,29 +152,30 @@ if __name__=='__main__':
         module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
                          prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc)
         print("module 2: ",module_2_cmd)
-        os.system(module_2_cmd)
+        #os.system(module_2_cmd)
         ## module 3 command
         module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
         print("module 3: ",module_3_cmd)
-        os.system(module_3_cmd)
+        #os.system(module_3_cmd)
         ## module 4 command
-        RepeatDetector_O="name_out"
-        RepeatDetector_I="*gz"
-        RepeatSummary_O="name_repeatsummary.tsv"
-        RepeatSummary_I="name_out.repeat"
+        RepeatDetector_O=str(name_folder_dir+"/"+name)
+        RepeatDetector_I_list=glob(name_folder_dir+"/*gz")
+        RepeatDetector_I=" ".join(RepeatDetector_I_list)
+        RepeatSummary_O=str(name_folder_dir+"/"+name+"_repeatsummary.tsv")
+        RepeatSummary_I=str(name_folder_dir+"/"+name+".repeat")
         module_4_cmd=str("python3 "+current_script_dir+"/module_4.py "+RepeatDetector_loc\
                          +" "+RepeatSummary_loc+" "+RepeatDetector_O+" "+RepeatDetector_r\
                          +" "+RepeatDetector_R+" "+RepeatDetector_n+" "+RepeatDetector_I\
                          +" "+RepeatSummary_O+" "+RepeatSummary_I)
         print("module 4: ",module_4_cmd)
-        os.system(module_4_cmd)
+        #os.system(module_4_cmd)
         ## module 5 command
         module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
         print("module 5: ",module_5_cmd)
-        os.system(module_5_cmd)
+        #os.system(module_5_cmd)
     
     ## multi-process
-    pool=Pool(process_num)
+    pool=Pool(int(process_num))
 
     for name_prj_ass in name_prj_ass_list:
         name=name_prj_ass[0]
@@ -212,14 +214,15 @@ if __name__=='__main__':
                     max_qualified_num+" "+\
                     TR_candidates_dir+" "+\
                     FOT2X_loc)
-    print("module 6 is processing.")
+    print("module 6: ",module_6_cmd)
+    os.system(module_6_cmd)
     ## Add URL column to the log.
     ## Add GENOME_SIZE to the log.
     URL_list=[]
     GENOME_SIZE_list=[]
     for name in name_list:
-        url_loc=str(output_dir+"/"+name+"/url")
-        GENOME_SIZE_loc=str(output_dir+"/"+name+"/genome_size")
+        url_loc=str(output_dir+"/TRIP_results/"+name+"/url")
+        GENOME_SIZE_loc=str(output_dir+"/TRIP_results/"+name+"/genome_size")
         with open(url_loc,'r') as f:
             lines=[x.strip() for x in f.readlines()]
             URL=";".join(lines)

@@ -239,7 +239,7 @@ if __name__=='__main__':
             print("Can't find ",str(RepeatMaster_output+"/"+species+"_repeatsummary"+file_type)," to read.")
             print(e)
             continue
-        print(species," is being processed by Cal_Repeats_Per_Genome_and_Percent_of_Len_Linux.py" )
+        print(species," is being processed by cal_repeats_per_genome_and_percent_of_len_linux.py" )
         output=format_output(data,eff_read_len,num_reads,avg_genome_cov,genome_size,output_tables)
         try:
             matplotlib_fig(output,"percent_repeats_len_per_read",log=False,ylabel='Percentage',index='percent_repeat_unit_in_sequences',dp=output_figs)

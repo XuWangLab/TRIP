@@ -74,15 +74,6 @@ except Exception as e:
     sys.exit()
     
 
-## check whether processed_tables folder exists
-processed_tables_dir=str(output_dir+"/"+"processed_tables")
-if os.path.exists(processed_tables_dir):
-    print("module 1: ",processed_tables_dir," exists. Use it.")
-else:
-    print("module 1: ",processed_tables_dir," doesn't exist. Create it.")
-    os.makedirs(processed_tables_dir)
-
-
 ## check whether filtered_tables folder exists
 filtered_tables_dir=str(output_dir+"/"+"filtered_tables")
 if os.path.exists(filtered_tables_dir):

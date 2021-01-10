@@ -54,8 +54,8 @@ print(parse_cmd)
 
 ## Download the FASTQ files to the name-folder
 wget_cmd=str("bash "+name_folder_dir+"/wget.sh")
+time.sleep(random.choice(range(2,20))) ## in case IP restriction
 print(wget_cmd)
-time.sleep(random.choice(range(1,10))) ## in case IP restriction
 os.system(wget_cmd)
 
 

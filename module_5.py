@@ -10,7 +10,7 @@ Contact: yihangjoe@foxmail.com
 
 ####============================ description ==============================####
 ## module 5
-Process the repeatmaster output tables and store into processed_tables.
+Process the repeatmaster output tables and store into filtered_tables.
 
 CRPG_input.tsv:
 code,read_len,num_reads,avg_genome_cov,genome_size
@@ -50,14 +50,19 @@ bases	707829584508
 ## avg_genome_cov=bases/genome_size
 stat_file=str(name_folder_dir+"/"+name+".stat")
 stat_df=pd.read_csv(stat_file,header=None,sep="\t")
-reads_num=stat_df.loc[0,1]
-bases_num=stat_df.loc[1,1]
-read_len=float('%.2f' % bases_num/reads_num )
+reads_num=float(stat_df.loc[0,1])
+bases_num=float(stat_df.loc[1,1])
+print("reads_num: ",reads_num)
+print("reads_num type: ",type(reads_num))
+print("bases_num: ",bases_num)
+print("bases_num type: ",type(bases_num))
+read_len=float('%.2f' % (bases_num/reads_num) )
 
-with open("genome_size",'r') as f:
+genome_size_loc=str(name_folder_dir+"/genome_size")
+with open(genome_size_loc,'r') as f:
     genome_size=int(f.readline())
 
-avg_genome_cov=float('%.2f' % bases_num/genome_size)
+avg_genome_cov=float('%.2f' % (bases_num/genome_size))
 
 CRPG_input_dict={'code':[name],
                  'read_len':[read_len],
@@ -73,8 +78,8 @@ CRPG_input_df.to_csv(CRPG_input_loc,sep="\t",index=None)
 
 
 ## parse the CRPG_input.tsv to Cal_Repeats_Per_Genome_and_Percent_of_Len_Linux.py
-filtered_tables_dir=str(output_dir+"/"+"filtered_tables")
-barplots_dir=str(output_dir+"/"+"barplots")
+filtered_tables_dir=str(output_dir+"/TRIP_results/"+"filtered_tables")
+barplots_dir=str(output_dir+"/TRIP_results/"+"barplots")
 CRPG_cmd=str('python3 '+CRPG_loc+" "+name_folder_dir+" "+CRPG_input_loc+" "+filtered_tables_dir+" "+barplots_dir)
 print("module 5: ",CRPG_cmd)
 os.system(CRPG_cmd)

@@ -39,7 +39,7 @@ time.sleep(random.choice(range(1,99))) ## in case IP restriction
 url=str("https://www.ncbi.nlm.nih.gov/assembly/"+assembly+"/")
 print("module 3: requesting ",url)
 html=requests.get(url)
-bf=BeautifulSoup(html.text)
+bf=BeautifulSoup(html.text,features="lxml")
 len_str=bf.find("td",string="Total ungapped length").next_sibling.text
 len_int=int(len_str.replace(",",""))
 
