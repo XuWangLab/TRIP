@@ -80,6 +80,7 @@ needed python pacakges:
 """
 import os
 import sys
+import re
 import pandas as pd
 import inspect
 import time
@@ -137,7 +138,17 @@ if __name__=='__main__':
     
     ## get the list of BIOPROJECTs
     name_list=list(infile_df.loc[:,'NAME'])
-    prj_list=list(infile_df.loc[:,'BIOPROJECT'])
+    if len(name_list)!=len(set(name_list)):
+        print("error: repeat NAME. exit.")
+        sys.exit()
+    prj_list_temp=list(infile_df.loc[:,'BIOPROJECT'])
+    prj_list=[]
+    for prj in prj_list_temp:
+        prj_split=re.split("[,|:|;| |\\|\|]",prj)
+        if len(prj_split)>1:
+            print("warning: multiple BIOPROJECT recordings in one species, use the first one. prj: ",prj)
+        prj_list.append(prj_split[0])
+    
     ass_list=list(infile_df.loc[:,'ASSEMBLY'])
     name_prj_ass_list=list(zip(name_list,prj_list,ass_list))
     name_num=len(name_list)
@@ -176,13 +187,14 @@ if __name__=='__main__':
     
     ## multi-process
     pool=Pool(int(process_num))
-
+    count=0
     for name_prj_ass in name_prj_ass_list:
         name=name_prj_ass[0]
         prj=name_prj_ass[1]
         ass=name_prj_ass[2]
         print("%s-%s-%s is processing." % (name,prj,ass))
-        time.sleep(10)
+        time.sleep(60*count)  ## in case NCBI API restriction
+        count+=1
         pool.apply_async(func=module2to4, args=(name,prj,ass,))
 
     pool.close()
@@ -232,7 +244,7 @@ if __name__=='__main__':
             GENOME_SIZE_list.append(GENOME_SIZE)
     
     infile_df['URL']=URL_list
-    infile_df['GENOME_SIZE']=GENOME_SIZE
+    infile_df['GENOME_SIZE']=GENOME_SIZE_list
     
     infile_df.to_csv(str(output_dir+"/TRIP_results/"+"TRIP.log.csv"),index=None)
     
