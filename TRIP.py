@@ -76,6 +76,7 @@ needed python pacakges:
     time
     traceback
     multiprocessing
+    hashlib
 ####=======================================================================####
 """
 import os
@@ -87,6 +88,7 @@ import time
 from glob import glob
 ##from multiprocessing import Process
 from multiprocessing import Pool
+import hashlib
 
 ## infile_dir=r"C:\CurrentProjects\Telomere\code\TRIP\TRIP_input.tsv"
 ## output_dir=r"C:\CurrentProjects\Telomere\code\TRIP"
@@ -157,17 +159,69 @@ if __name__=='__main__':
     module_1_cmd=str("python3 "+current_script_dir+"/module_1.py "+infile_dir+" "+output_dir)
     print("module 1: ",module_1_cmd)
     os.system(module_1_cmd)
+    
+    ## Check whether new files downloaded. If "no", then no need to re-run the 
+    ## module 3-5
+    def findnewestgz(file_path):
+        filenames = os.listdir(file_path)
+        name_ = []
+        time_ = []
+        #print(filenames)
+        for filename in filenames:
+            if '.gz' == filename[-3:]: ## only check gz files
+                print(filename)
+                c_time = os.path.getctime(file_path+'/'+filename)
+                name_.append(file_path+'/'+filename)
+                time_.append(c_time)
+        #print(name_)
+        #print(time_)
+        if len(time)>0:
+            newest_file = name_[time_.index(max(time_))]
+            return newest_file
+        else:
+            return 0
+        
+    def getmd5sum(file_path):
+        return hashlib.md5(file_path.encode('utf-8')).hexdigest()
+
     def module2to4(name,prj,ass):
         name_folder_dir=str(output_dir+"/TRIP_results/"+name)  ## created in module 1
         ## module 2 command
         module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
                          prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc)
         print("module 2: ",module_2_cmd)
-        #os.system(module_2_cmd)
+        os.system(module_2_cmd)
+        ## check md5_log
+        md5_log_loc=str(name_folder_dir+"/md5_log")
+        if os.path.exists(md5_log_loc):
+            newest_gz=findnewestgz(name_folder_dir)
+            try:
+                md5sum=getmd5sum(newest_gz)
+            except:
+                print("Unexpected error. Cannot get md5 value of %s. Skip." % (name))
+                return
+            with open(md5_log_loc,'r') as f:
+                old_md5sum=str(f.readline())
+            if md5sum!=old_md5sum:
+                with open(md5_log_loc,'w') as f:
+                    f.write(str(md5sum))
+            else:
+                print("%s gz files have no change. Skip." % (name))
+                return
+        else:
+            newest_gz=findnewestgz(name_folder_dir)
+            if newest_gz==0:
+                print("%s has no downloaded gz files, skip." % (name))
+                return
+            else:
+                md5sum=getmd5sum(newest_gz)
+                with open(md5_log_loc,'w') as f:
+                    f.write(str(md5sum))
+                
         ## module 3 command
         module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
         print("module 3: ",module_3_cmd)
-        #os.system(module_3_cmd)
+        os.system(module_3_cmd)
         ## module 4 command
         RepeatDetector_O=str(name_folder_dir+"/"+name)
         RepeatDetector_I_list=glob(name_folder_dir+"/*gz")
@@ -179,11 +233,11 @@ if __name__=='__main__':
                          +" "+RepeatDetector_R+" "+RepeatDetector_n+" "+RepeatDetector_I\
                          +" "+RepeatSummary_O+" "+RepeatSummary_I)
         print("module 4: ",module_4_cmd)
-        #os.system(module_4_cmd)
+        os.system(module_4_cmd)
         ## module 5 command
         module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
         print("module 5: ",module_5_cmd)
-        #os.system(module_5_cmd)
+        os.system(module_5_cmd)
     
     ## multi-process
     pool=Pool(int(process_num))
