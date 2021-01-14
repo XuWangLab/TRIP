@@ -365,7 +365,7 @@ if __name__=='__main__':
         prj=name_prj_ass[1]
         ass=name_prj_ass[2]
         time.sleep(60*count)  ## in case NCBI API restriction
-        print("%s-%s-%s is processing." % (name,prj,ass))
+        print("###=============    %s-%s-%s is processing.    ==============###" % (name,prj,ass))
         count+=1
         pool.apply_async(func=module2to4, args=(name,prj,ass,))
 
