@@ -108,10 +108,10 @@ manual=\
     "Warning: TRIP use 'python3' as default cmd. Type 'python3' to test whether your system has 'python3'.\n"\
     "         Make sure you have the executing authority of all files in TRIP. Try `chmod 777 -R TRIP/` \n\n"\
     "Commands:\n"\
-    "-h [--help]:                      Print this manual and exit.\n"\
-    "-i [--input]:                     The input table, which should be tab seprated format with 'NAME','BIOPROJECT','ASSEMBLY' columns. See example_input.tsv.\n"\
-    "-o [--output]:                    The output dir.\n"\
-    "-p [--process_num]:               Multi-process mode.The number of processes (default=32).\n"\
+    "-h [--help]                       Print this manual and exit.\n"\
+    "-i [--input]                      The input table, which should be tab seprated format with 'NAME','BIOPROJECT','ASSEMBLY' columns. See example_input.tsv.\n"\
+    "-o [--output]                     The output dir.\n"\
+    "-p [--process_num]                Multi-process mode.The number of processes (default=32).\n"\
     "-r [--RepeatDetector_r]           RepeatDetector:minimal repeat size (default=1). \n"\
     "-R [--RepeatDetector_R]           RepeatDetector:maximal repeat size (default=25). \n"\
     "-n [--RepeatDetector_n]           RepeatDetector:minimal #repeats*size, to control false positives (default=16).\n"\
