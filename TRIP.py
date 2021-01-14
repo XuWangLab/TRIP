@@ -81,6 +81,7 @@ needed python pacakges:
 """
 import os
 import sys
+import getopt
 import re
 import pandas as pd
 import inspect
@@ -90,11 +91,61 @@ from glob import glob
 from multiprocessing import Pool
 import hashlib
 
-## infile_dir=r"C:\CurrentProjects\Telomere\code\TRIP\TRIP_input.tsv"
-## output_dir=r"C:\CurrentProjects\Telomere\code\TRIP"
+short_cmd="hi:o:p:r:R:n:"
+long_cmd=["help","input=","output=","process_num=","RepeatDetector_r=","RepeatDetector_R=",\
+          "RepeatDetector_n=","rpt_reads_num=","total_reads_num=","unit_len=",\
+          "eff_read_len=","genome_size=","avg_genome_cov=","repeats_len=",\
+          "repeats_per_read=","reads_per_genome=","repeats_per_genome=",\
+          "repeats_per_million_reads=","repeats_len_per_genome=","repeats_len_per_million_reads",\
+          "percent_repeats_len_per_read=","percent_repeats_len_per_genome=",\
+          "percent_repeat_unit_in_seqs=","best_candidate_enrichment=","max_qualified_num="]
 
-infile_dir=sys.argv[1]
-output_dir=sys.argv[2]
+manual=\
+    "Program: TRIP (Telomeric Repeat motif Identificatioin Pipeline) \n\n"\
+    "Version: 1.0 \n\n"\
+    "Contact: Yihang Zhou <yzz0191@auburn.edu> \n\n"\
+    "Usage: python3 dir_to_TRIP/TRIP.py -i dir_to_TRIP/example_input.tsv -o output_dir \n\n"\
+    "Warning: TRIP use 'python3' as default cmd. Type 'python3' to test whether your system has 'python3'.\n"\
+    "         Make sure you have the executing authority of all files in TRIP. Try `chmod 777 -R TRIP/` \n\n"\
+    "Commands:\n"\
+    "-h [--help]:                      Print this manual and exit.\n"\
+    "-i [--input]:                     The input table, which should be tab seprated format with 'NAME','BIOPROJECT','ASSEMBLY' columns. See example_input.tsv.\n"\
+    "-o [--output]:                    The output dir.\n"\
+    "-p [--process_num]:               Multi-process mode.The number of processes (default=32).\n"\
+    "-r [--RepeatDetector_r]           RepeatDetector:minimal repeat size (default=1). \n"\
+    "-R [--RepeatDetector_R]           RepeatDetector:maximal repeat size (default=25). \n"\
+    "-n [--RepeatDetector_n]           RepeatDetector:minimal #repeats*size, to control false positives (default=16).\n"\
+    "--rpt_reads_num                   Threshold:the number of repeat-containing reads (default=12000).\n"\
+    "--total_reads_num                 Threshold:the number of total sequenced reads (default=0).\n"\
+    "--repeats_num                     Threshold:the number of repeats (default=0).\n"\
+    "--unit_len                        Threshold:the length of a repeat unit (bp), unincluding. (default=5).\n"\
+    "--eff_read_len                    Threshold:the effective length of reads (bp), unincluding. (default=0).\n"\
+    "--genome_size                     Threshold:genome assembly length (bp), unincluding. (default=0).\n"\
+    "--avg_genome_cov                  Threshold:the average coverage of a genome, unincluding. (default=10).\n"\
+    "--repeats_len                     Threshold:the length of repeats (bp), unincluding. (default=0).\n"\
+    "--repeats_per_read                Threshold:the average number of repeats per read in repeats containing reads, unincluding. (default=0).\n"\
+    "--reads_per_genome                Threshold:the number of repeats containing reads per genome, unincluding. (default=0).\n"\
+    "--repeats_per_genome              Threshold:number of repeats per haploid genome, unincluding. (default=0).\n"\
+    "--repeats_per_million_reads       Threshold:number of repeats per 1 million repeats containing reads, unincluding. (default=0).\n"\
+    "--repeats_len_per_genome          Threshold:total repeat length (Kb) in a haploid genome, unincluding. (default=0).\n"\
+    "--repeats_len_per_million_reads   Threshold:the average repeat length (Kb) per million reads, unincluding. (default=4).\n"\
+    "--percent_repeats_len_per_read    Threshold:the average percentage of  repeat length in repeat-containing reads, unincluding. (default=0.5).\n"\
+    "--percent_repeats_len_per_genome  Threshold:the percentage of total repeats length in a haploid genome, unincluding. (default=0).\n"\
+    "--percent_repeat_unit_in_seqs     Threshold:the average percentage of repeat units length in all sequencing reads, unincluding. (default=0). \n"\
+    "--best_candidate_enrichment       Call criterion:the length ratio of the most abundant repeat  over the next abundant repeat, including. (default=3).\n"\
+    "--max_qualified_num               Call criterion:the maximum number of identified TR candidates from upstream, including. (default=999).\n"
+        
+    
+try:
+    opts,args=getopt.getopt(sys.argv[1:],short_cmd,long_cmd)
+except getopt.GetoptError as err:
+    print(manual)
+    print(str(err))
+    sys.exit(2)
+    
+    
+infile_dir="/TRIP/example_input.tsv"
+output_dir="."
 
 current_script_dir=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 ## str to int
@@ -110,7 +161,7 @@ CRPG_loc=str(current_script_dir+"/cal_repeats_per_genome_and_percent_of_len_linu
 rpt_reads_num=str(12000)
 total_reads_num=str(0)
 repeats_num=str(0)
-unit_len=str(5)
+unit_len=str(4)
 eff_read_len=str(0)
 genome_size=str(0)
 avg_genome_cov=str(10)
@@ -127,7 +178,66 @@ percent_repeat_unit_in_seqs=str(0)
 best_candidate_enrichment=str(3)
 max_qualified_num=str(999)
 FOT2X_loc=str(current_script_dir+"/filter_output_tables_to_xlsx.py")
+    
+for o,a in opts:
+    if o in ("-h","--help"):
+        print(manual)
+        sys.exit()
+    elif o in ("-i","--input"):
+        infile_dir=a
+    elif o in ("-o","--output"):
+        output_dir=a
+    elif o in ("-p","--process_num"):
+        process_num=a
+    elif o in ("-r","--RepeatDetector_r"):
+        RepeatDetector_r=a
+    elif o in ("-R","--RepeatDetector_R"):
+        RepeatDetector_R=a
+    elif o in ("-n","--RepeatDetector_n"):
+        RepeatDetector_n=a
+    elif o == "--rpt_reads_num":
+        rpt_reads_num=a
+    elif o == "--total_reads_num":
+        total_reads_num=a
+    elif o == "--unit_len":
+        unit_len=a
+    elif o == "--eff_read_len":
+        eff_read_len=a
+    elif o == "--genome_size":
+        genome_size=a
+    elif o == "--avg_genome_cov":
+        avg_genome_cov=a
+    elif o == "--repeats_len":
+        repeats_len=a
+    elif o == "--repeats_per_read":
+        repeats_per_read=a
+    elif o == "--reads_per_genome":
+        reads_per_genome=a
+    elif o == "--repeats_per_genome":
+        repeats_per_genome=a
+    elif o == "--repeats_per_million_reads":
+        repeats_per_million_reads=a
+    elif o == "--repeats_len_per_genome":
+        repeats_len_per_genome=a
+    elif o == "--repeats_len_per_million_reads":
+        repeats_len_per_million_reads=a
+    elif o == "--percent_repeats_len_per_read":
+        percent_repeats_len_per_read=a
+    elif o == "--percent_repeats_len_per_genome":
+        percent_repeats_len_per_genome=a
+    elif o == "--percent_repeat_unit_in_seqs":
+        percent_repeat_unit_in_seqs=a
+    elif o == "--best_candidate_enrichment":
+        best_candidate_enrichment=a
+    elif o == "--max_qualified_num":
+        max_qualified_num=a
+    else:
+        print(manual)
+        sys.exit()
 
+if len(opts)==0:
+    print(manual)
+    sys.exit()
 
 if __name__=='__main__':
     ## read infile
@@ -160,25 +270,25 @@ if __name__=='__main__':
     print("module 1: ",module_1_cmd)
     os.system(module_1_cmd)
     
-    ## Check whether new files downloaded. If "no", then no need to re-run the 
-    ## module 3-5
     def findnewestgz(file_path):
         filenames = os.listdir(file_path)
         name_ = []
         time_ = []
-        #print(filenames)
+        #print("newest_gz, filenames: ",filenames)
         for filename in filenames:
             if '.gz' == filename[-3:]: ## only check gz files
-                print(filename)
+                #print(filename)
                 c_time = os.path.getctime(file_path+'/'+filename)
                 name_.append(file_path+'/'+filename)
                 time_.append(c_time)
-        #print(name_)
+        #print("newest_gz, name_: ",name_)
         #print(time_)
-        if len(time)>0:
+        if len(time_)>0:
             newest_file = name_[time_.index(max(time_))]
+            #print("newest_gz, newest_file: ",newest_file)
             return newest_file
         else:
+            #print("newest_gz, 0")
             return 0
         
     def getmd5sum(file_path):
@@ -192,29 +302,37 @@ if __name__=='__main__':
         print("module 2: ",module_2_cmd)
         os.system(module_2_cmd)
         ## check md5_log
+        ## Check whether new files downloaded. If "no", then no need to re-run the module 3-5
         md5_log_loc=str(name_folder_dir+"/md5_log")
         if os.path.exists(md5_log_loc):
+            print(name," md5_log exits.")
             newest_gz=findnewestgz(name_folder_dir)
             try:
                 md5sum=getmd5sum(newest_gz)
+                #print("md5sum: ",md5sum)
             except:
                 print("Unexpected error. Cannot get md5 value of %s. Skip." % (name))
                 return
             with open(md5_log_loc,'r') as f:
+                #print("reading old md5_log.")
                 old_md5sum=str(f.readline())
             if md5sum!=old_md5sum:
+                #print("update new md5_log.")
                 with open(md5_log_loc,'w') as f:
                     f.write(str(md5sum))
             else:
                 print("%s gz files have no change. Skip." % (name))
                 return
         else:
+            print(name," md5_log doesn't exist.")
             newest_gz=findnewestgz(name_folder_dir)
+            #print("newest gz: ",newest_gz)
             if newest_gz==0:
                 print("%s has no downloaded gz files, skip." % (name))
                 return
             else:
                 md5sum=getmd5sum(newest_gz)
+                #print("write new md5_log.")
                 with open(md5_log_loc,'w') as f:
                     f.write(str(md5sum))
                 
@@ -246,8 +364,8 @@ if __name__=='__main__':
         name=name_prj_ass[0]
         prj=name_prj_ass[1]
         ass=name_prj_ass[2]
-        print("%s-%s-%s is processing." % (name,prj,ass))
         time.sleep(60*count)  ## in case NCBI API restriction
+        print("%s-%s-%s is processing." % (name,prj,ass))
         count+=1
         pool.apply_async(func=module2to4, args=(name,prj,ass,))
 
