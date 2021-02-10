@@ -13,16 +13,16 @@ Contact: yihangjoe@foxmail.com
 Given the NAME column and output_dir, check whether name-folder exists (delete if exists),
 otherwise, create it. Create processed_tables folder in working dir to store tables processed from
 repeatmaster output. Create barplots folder to store 4 types of barplots generated
-from proccessed tables. Create filtered_tables to store filtered tables from 
+from proccessed tables. Create filtered_tables to store filtered tables from
 processed tables. Create manual.txt to record failed NAMEs for further manual
 procession.
 
 for each thread:
     ## module 2
-    Given the BIOPROJECT, download the recording file from ENA database to the 
-    name-folder. Then use parsing script to extract FASTQ file FTP locations. 
+    Given the BIOPROJECT, download the recording file from ENA database to the
+    name-folder. Then use parsing script to extract FASTQ file FTP locations.
     Download the FASTQ files to the name-folder.
-    ## module 3 
+    ## module 3
     Given the ASSEMBLY, web-scrap the "Total ungapped length" from NCBI website.
     Write the genome_size to genome_size file in name-folder.
     ## module 4
@@ -106,6 +106,7 @@ manual=\
     "Contact: Yihang Zhou <yzz0191@auburn.edu> \n\n"\
     "Usage: python3 dir_to_TRIP/TRIP.py -i dir_to_TRIP/example_input.tsv -o output_dir \n\n"\
     "Warning: TRIP use 'python3' as default cmd. Type 'python3' to test whether your system has 'python3'.\n"\
+    "         TRIP use 'bash' as the shell. Make sure 'bash' is your default shell.\n"\
     "         Make sure you have the executing authority of all files in TRIP. Try `chmod 777 -R TRIP/` \n\n"\
     "Commands:\n"\
     "-h [--help]                       Print this manual and exit.\n"\
@@ -133,17 +134,19 @@ manual=\
     "--percent_repeats_len_per_genome  Threshold:the percentage of total repeats length in a haploid genome, unincluding. (default=0).\n"\
     "--percent_repeat_unit_in_seqs     Threshold:the average percentage of repeat units length in all sequencing reads, unincluding. (default=0). \n"\
     "--best_candidate_enrichment       Call criterion:the length ratio of the most abundant repeat  over the next abundant repeat, including. (default=3).\n"\
-    "--max_qualified_num               Call criterion:the maximum number of identified TR candidates from upstream, including. (default=999).\n"
-        
-    
+    "--max_qualified_num               Call criterion:the maximum number of identified TR candidates from upstream, including. (default=999).\n"\
+    "--skip_subreads                   Skip subreads. The subreads are sequenced from Pacbio. (default=True). [True, False].\n"\
+    "--downsample                      Downsample number of sequencing files. (default=4). [integer, 0]. 0 means sample all."
+
+
 try:
     opts,args=getopt.getopt(sys.argv[1:],short_cmd,long_cmd)
 except getopt.GetoptError as err:
     print(manual)
     print(str(err))
     sys.exit(2)
-    
-    
+
+
 infile_dir="/TRIP/example_input.tsv"
 output_dir="."
 
@@ -177,8 +180,10 @@ percent_repeats_len_per_genome=str(0)
 percent_repeat_unit_in_seqs=str(0)
 best_candidate_enrichment=str(3)
 max_qualified_num=str(999)
+skip_subreads=str("True")
+downsample=str(4)
 FOT2X_loc=str(current_script_dir+"/filter_output_tables_to_xlsx.py")
-    
+
 for o,a in opts:
     if o in ("-h","--help"):
         print(manual)
@@ -231,6 +236,10 @@ for o,a in opts:
         best_candidate_enrichment=a
     elif o == "--max_qualified_num":
         max_qualified_num=a
+    elif o == "--skip_subreads":
+        skip_subreads=a
+    elif o == "--downsample":
+        downsample=a
     else:
         print(manual)
         sys.exit()
@@ -247,7 +256,7 @@ if __name__=='__main__':
         print("error: The input tsv file has issues.")
         print(e)
         sys.exit()
-    
+
     ## get the list of BIOPROJECTs
     name_list=list(infile_df.loc[:,'NAME'])
     if len(name_list)!=len(set(name_list)):
@@ -260,16 +269,16 @@ if __name__=='__main__':
         if len(prj_split)>1:
             print("warning: multiple BIOPROJECT recordings in one species, use the first one. prj: ",prj)
         prj_list.append(prj_split[0])
-    
+
     ass_list=list(infile_df.loc[:,'ASSEMBLY'])
     name_prj_ass_list=list(zip(name_list,prj_list,ass_list))
     name_num=len(name_list)
-    
+
     ## module 1 command
     module_1_cmd=str("python3 "+current_script_dir+"/module_1.py "+infile_dir+" "+output_dir)
     print("module 1: ",module_1_cmd)
     os.system(module_1_cmd)
-    
+
     def findnewestgz(file_path):
         filenames = os.listdir(file_path)
         name_ = []
@@ -290,7 +299,7 @@ if __name__=='__main__':
         else:
             #print("newest_gz, 0")
             return 0
-        
+
     def getmd5sum(file_path):
         return hashlib.md5(file_path.encode('utf-8')).hexdigest()
 
@@ -298,7 +307,8 @@ if __name__=='__main__':
         name_folder_dir=str(output_dir+"/TRIP_results/"+name)  ## created in module 1
         ## module 2 command
         module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
-                         prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc)
+                         prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc+" "+\
+                         skip_subreads+" "+downsample)
         print("module 2: ",module_2_cmd)
         os.system(module_2_cmd)
         ## check md5_log
@@ -335,7 +345,7 @@ if __name__=='__main__':
                 #print("write new md5_log.")
                 with open(md5_log_loc,'w') as f:
                     f.write(str(md5sum))
-                
+
         ## module 3 command
         module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
         print("module 3: ",module_3_cmd)
@@ -356,7 +366,7 @@ if __name__=='__main__':
         module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
         print("module 5: ",module_5_cmd)
         os.system(module_5_cmd)
-    
+
     ## multi-process
     pool=Pool(int(process_num))
     count=0
@@ -372,7 +382,7 @@ if __name__=='__main__':
     pool.close()
     time.sleep(5)
     pool.join()
-    
+
     ## module 6 command
     filtered_tables_dir=str(output_dir+"/TRIP_results/"+"filtered_tables")
     TR_candidates_dir=str(output_dir+"/TRIP_results/"+"TR_candidates")
@@ -414,9 +424,9 @@ if __name__=='__main__':
         with open(GENOME_SIZE_loc,'r') as f:
             GENOME_SIZE=int(f.readline())
             GENOME_SIZE_list.append(GENOME_SIZE)
-    
+
     infile_df['URL']=URL_list
     infile_df['GENOME_SIZE']=GENOME_SIZE_list
-    
+
     infile_df.to_csv(str(output_dir+"/TRIP_results/"+"TRIP.log.csv"),index=None)
-    
+

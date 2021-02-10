@@ -10,8 +10,8 @@ Contact: yihangjoe@foxmail.com
 
 ####============================ description ==============================####
 ## module 2
-Given the BIOPROJECT, download the recording file from ENA database to the 
-name-folder. Then use parsing script to extract FASTQ file FTP locations. 
+Given the BIOPROJECT, download the recording file from ENA database to the
+name-folder. Then use parsing script to extract FASTQ file FTP locations.
 Download the FASTQ files to the name-folder.
 #================================== input =====================================
 
@@ -35,6 +35,8 @@ prj=sys.argv[2]
 name_folder_dir=sys.argv[3]
 ENA2URL_loc=sys.argv[4]
 wget_loc=sys.argv[5]
+skip_subreads=sys.argv[6]
+downsample=int(sys.argv[7])
 
 ## download records from ENA
 ENA_record=str(name+"_"+prj+"_tsv.txt")
@@ -51,6 +53,41 @@ print(cp_cmd)
 parse_cmd=str("bash "+name_folder_dir+"/ENA2URL.sh")
 os.system(parse_cmd)
 print(parse_cmd)
+
+## filter the url file and generate url_filtered file under name-folder
+if skip_subreads=="True":
+    skip_subreads=True
+elif skip_subreads=="False":
+    skip_subreads=False
+else:
+    print("skip_subreads=",skip_subreads," is not in [True,False], change it to True")
+    skip_subreads=True
+url_file_dir=str(name_folder_dir+"/url")
+url_filtered_file_dir=str(name_folder_dir+"/url_filtered")
+with open(url_file_dir,'r') as f:
+    urls=f.readlines()
+    subreads_filtered_urls=[]
+    downsample_filtered_urls=[]
+    filtered_urls=[]
+    # subreads filter
+    if skip_subreads:
+        for line in urls:
+            if "subreads" not in line:
+                subreads_filtered_urls.append(line)
+    # downsample filter
+    if len(subreads_filtered_urls)>0:
+        downsample_filtered_urls=subreads_filtered_urls
+    else:
+        downsample_filtered_urls=urls
+    if 0<downsample<len(downsample_filtered_urls):
+        filtered_urls=random.sample(downsample_filtered_urls,downsample)
+    else:
+        filtered_urls=downsample_filtered_urls
+    # write
+    with open(url_filtered_file_dir,'w') as ff:
+        for line in filtered_urls:
+            ff.write(line)
+
 
 ## Download the FASTQ files to the name-folder
 wget_cmd=str("bash "+name_folder_dir+"/wget.sh")
