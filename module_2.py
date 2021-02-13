@@ -37,6 +37,8 @@ ENA2URL_loc=sys.argv[4]
 wget_loc=sys.argv[5]
 skip_subreads=sys.argv[6]
 downsample=int(sys.argv[7])
+continue_=sys.argv[8]
+url_filter=sys.argv[9]
 
 ## download records from ENA
 ENA_record=str(name+"_"+prj+"_tsv.txt")
@@ -83,10 +85,26 @@ with open(url_file_dir,'r') as f:
         filtered_urls=random.sample(downsample_filtered_urls,downsample)
     else:
         filtered_urls=downsample_filtered_urls
-    # write
-    with open(url_filtered_file_dir,'w') as ff:
-        for line in filtered_urls:
-            ff.write(line)
+        
+    if continue_=="True":
+        if os.path.isfile(url_filtered_file_dir): ## 
+            if url_filter=="remain":
+                pass
+            elif url_filter=="overwrite":
+                with open(url_filtered_file_dir,'w') as ff:
+                    for line in filtered_urls:
+                        ff.write(line)
+            elif url_filter=="append":
+                with open(url_filtered_file_dir,'a') as ff:
+                    for line in filtered_urls:
+                        ff.write(line)
+            else:
+                print("url_filter parameter error, need to be in [overwrite,append,remain]: ",url_filter)
+        else:
+            # no original url_filtered_file_dir, write
+            with open(url_filtered_file_dir,'w') as ff:
+                for line in filtered_urls:
+                    ff.write(line)
 
 
 ## Download the FASTQ files to the name-folder

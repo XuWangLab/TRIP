@@ -136,7 +136,9 @@ manual=\
     "--best_candidate_enrichment       Call criterion:the length ratio of the most abundant repeat  over the next abundant repeat, including. (default=3).\n"\
     "--max_qualified_num               Call criterion:the maximum number of identified TR candidates from upstream, including. (default=999).\n"\
     "--skip_subreads                   Skip subreads. The subreads are sequenced from Pacbio. (default=True). [True, False].\n"\
-    "--downsample                      Downsample number of sequencing files. (default=4). [integer, 0]. 0 means sample all."
+    "--downsample                      Downsample number of sequencing files. (default=4). [integer, 0]. 0 means sample all.\n"\
+    "--continue                        Continue last interrupted downloads. (defaults=True). [True, False].\n"\
+    "--url_filter                      Overwrite, append or remain the url_filtered file, which decides how/whether to download new files. (default=remain). [overwrite,append,remain]."
 
 
 try:
@@ -182,6 +184,8 @@ best_candidate_enrichment=str(3)
 max_qualified_num=str(999)
 skip_subreads=str("True")
 downsample=str(4)
+continue_=str("True")
+url_filter=str("remain")
 FOT2X_loc=str(current_script_dir+"/filter_output_tables_to_xlsx.py")
 
 for o,a in opts:
@@ -240,6 +244,10 @@ for o,a in opts:
         skip_subreads=a
     elif o == "--downsample":
         downsample=a
+    elif o == "--continue":
+        continue_=a
+    elif o == "--url_filter":
+        url_filter=a
     else:
         print(manual)
         sys.exit()
@@ -308,7 +316,7 @@ if __name__=='__main__':
         ## module 2 command
         module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
                          prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc+" "+\
-                         skip_subreads+" "+downsample)
+                         skip_subreads+" "+downsample+" "+continue_+" "+url_filter)
         print("module 2: ",module_2_cmd)
         os.system(module_2_cmd)
         ## check md5_log
