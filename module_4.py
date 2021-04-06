@@ -44,7 +44,7 @@ RepeatDetector_cmd=str(RepeatDetector_loc+" "+RepeatDetector_O+" "+RepeatDetecto
                        +" -r "+RepeatDetector_r+" -R "+RepeatDetector_R+" -n "+\
                        RepeatDetector_n)
 print("module 4: ",RepeatDetector_cmd)
-#os.system(RepeatDetector_cmd)
+os.system(RepeatDetector_cmd)
 
 print("RepeatSummary_loc: ",RepeatSummary_loc)
 print("RepeatSummary_O: ",RepeatSummary_O)

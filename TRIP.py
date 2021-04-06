@@ -317,7 +317,7 @@ if __name__=='__main__':
         module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
                          prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc+" "+\
                          skip_subreads+" "+downsample+" "+continue_+" "+url_filter)
-        print("module 2: ",module_2_cmd)
+        print("module 2 cmd: ",module_2_cmd)
         os.system(module_2_cmd)
         ## check md5_log
         ## Check whether new files downloaded. If "no", then no need to re-run the module 3-5
@@ -356,7 +356,7 @@ if __name__=='__main__':
 
         ## module 3 command
         module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
-        print("module 3: ",module_3_cmd)
+        print("module 3 cmd: ",module_3_cmd)
         os.system(module_3_cmd)
         ## module 4 command
         RepeatDetector_O=str(name_folder_dir+"/"+name)
@@ -368,11 +368,11 @@ if __name__=='__main__':
                          +" "+RepeatSummary_loc+" "+RepeatDetector_O+" "+RepeatDetector_r\
                          +" "+RepeatDetector_R+" "+RepeatDetector_n+" "+RepeatDetector_I\
                          +" "+RepeatSummary_O+" "+RepeatSummary_I)
-        print("module 4: ",module_4_cmd)
+        print("module 4 cmd: ",module_4_cmd)
         os.system(module_4_cmd)
         ## module 5 command
         module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
-        print("module 5: ",module_5_cmd)
+        print("module 5 cmd: ",module_5_cmd)
         os.system(module_5_cmd)
 
     ## multi-process
