@@ -199,6 +199,7 @@ if __name__=='__main__':
     import matplotlib.pyplot as plt
     import sys
     import os
+    os.system('taskset -p %s' %os.getpid())
 
     ## import data
     RepeatMaster_output=sys.argv[1]

@@ -26,6 +26,7 @@ and generate the TR_candidates table and TR_candidates.dominant table.
 """
 import sys
 import os
+os.system('taskset -p %s' %os.getpid())
 
 filtered_tables_dir=sys.argv[1]
 rpt_reads_num_filter=sys.argv[2]

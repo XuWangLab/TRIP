@@ -29,6 +29,7 @@ import sys
 import os
 import time
 import random
+os.system('taskset -p %s' %os.getpid())
 
 name=sys.argv[1]
 prj=sys.argv[2]

@@ -91,6 +91,8 @@ from glob import glob
 from multiprocessing import Pool
 import hashlib
 
+os.system("taskset -p 0xff %d" % os.getpid())
+
 short_cmd="hi:o:p:r:R:n:"
 long_cmd=["help","input=","output=","process_num=","RepeatDetector_r=","RepeatDetector_R=",\
           "RepeatDetector_n=","rpt_reads_num=","total_reads_num=","unit_len=",\
@@ -374,6 +376,11 @@ if __name__=='__main__':
         module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
         print("module 5 cmd: ",module_5_cmd)
         os.system(module_5_cmd)
+        
+        ## trick to actually acquire cpu cores
+        j=0
+        for i in range(1000000000):
+            j = i**2
 
     ## multi-process
     pool=Pool(int(process_num))
