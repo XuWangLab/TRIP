@@ -235,7 +235,7 @@ for name in table_names:
 
         TR_candidates_df=pd.concat([processed_table_df,filter_results],axis=1)
 
-        TR_candidates_qualified_df=TR_candidates_df[TR_candidates_df['qualified']==1]
+        TR_candidates_qualified_df=TR_candidates_df[TR_candidates_df['qualified']==1].copy()
         TR_candidates_qualified_num=TR_candidates_qualified_df.shape[0]
         TR_candidates_qualified_df.index=range(TR_candidates_qualified_num)
         
@@ -258,12 +258,12 @@ for name in table_names:
             ## the TR candidate must extremly more doinant than the followers
             ## so set the repeats_len_per_million_reads difference to 5 times
             sorted_TR_qualified_candidates_df=\
-            TR_candidates_qualified_df.sort_values("repeats_len",ascending=False,inplace=False)
+            TR_candidates_qualified_df.sort_values("repeats_len",ascending=False,inplace=False).copy()
             sorted_TR_qualified_candidates_df.index=range(sorted_TR_qualified_candidates_df.shape[0])
             count=0
             
             if TR_candidates_qualified_num==1:
-                dominant_TR_candidate=pd.DataFrame(sorted_TR_qualified_candidates_df.loc[0]).T
+                dominant_TR_candidate=pd.DataFrame(sorted_TR_qualified_candidates_df.loc[0]).T.copy()
                 dominant_TR_candidate.loc[:,'difference']=1
                 TR_candidates_qualified_dominant=pd.concat([TR_candidates_qualified_dominant,dominant_TR_candidate],axis=0)
                 
