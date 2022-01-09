@@ -195,6 +195,7 @@ if __name__=='__main__':
     import numpy as np
     import matplotlib
     ## Agg is the non-interactive mode, so the script won't display fig in command-line linux system
+    matplotlib.rcParams['pdf.fonttype'] = 42
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     import sys
