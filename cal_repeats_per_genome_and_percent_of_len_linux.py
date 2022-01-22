@@ -10,8 +10,10 @@ code,read_len,num_reads,avg_genome_cov,genome_size
 SUSSC,151,693665606,42.36,2472461935
 """
 def format_output(data,eff_read_len,num_reads,avg_genome_cov,genome_size,output_dir):
-    ## format data
-    ## check data integrity
+    """
+    format data
+    check data integrity
+    """
     if len(data.columns)<4:
         if 'unit_len' not in data.columns:
             list_unit_len=[len(x) for x in data.index]
@@ -107,10 +109,12 @@ def format_output(data,eff_read_len,num_reads,avg_genome_cov,genome_size,output_
 ## matplotlib
 ## ylabel parameter here is useless
 def matplotlib_fig(df,column,index=None,ylabel='',yh_max=1,yh_min=0,log=False,former=30,format_='pdf',dp=""):
-    ## if index!=None, then order the repeats using df[index] value, extract top
-    ## $former repeats, to get the desired top $former df.index, and replace the
-    ## repeats with df[column], and finally sort the dictionary based on index
-    ## length again.
+    """
+    if index!=None, then order the repeats using df[index] value, extract top
+    $former repeats, to get the desired top $former df.index, and replace the
+    repeats with df[column], and finally sort the dictionary based on index
+    length again.
+    """
     if index!=None:
         ## dict_ is a dictionary with the key of df.index and value of df[column]
         dict_=dict(zip(list(df.index),list(df.loc[:,column])))
@@ -200,7 +204,7 @@ if __name__=='__main__':
     import matplotlib.pyplot as plt
     import sys
     import os
-    os.system('taskset -p %s' %os.getpid())
+    #os.system('taskset -p %s' %os.getpid())
 
     ## import data
     RepeatMaster_output=sys.argv[1]

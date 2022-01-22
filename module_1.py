@@ -31,7 +31,7 @@ python3 module_1.py infile_dir output_dir
 import sys
 import os
 import pandas as pd
-os.system('taskset -p %s' %os.getpid())
+#os.system('taskset -p %s' %os.getpid())
 
 infile_dir=sys.argv[1]
 output_dir=sys.argv[2].rstrip("\\").rstrip("/")

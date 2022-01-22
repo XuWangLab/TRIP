@@ -30,7 +30,7 @@ import time
 from bs4 import BeautifulSoup
 import sys
 import os
-os.system('taskset -p %s' %os.getpid())
+#os.system('taskset -p %s' %os.getpid())
 
 assembly=sys.argv[1]
 name_folder_dir=sys.argv[2]

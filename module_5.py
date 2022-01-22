@@ -33,7 +33,7 @@ python3 Cal_Repeats_Per_Genome_and_Percent_of_Len_Linux.py name_folder_dir CRPG_
 import sys
 import os
 import pandas as pd
-os.system('taskset -p %s' %os.getpid())
+#os.system('taskset -p %s' %os.getpid())
 
 CRPG_loc=sys.argv[1]
 name=sys.argv[2]

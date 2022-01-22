@@ -27,7 +27,7 @@ RepeatSummary name_25nt.tsv name_out.repeat
 """
 import sys
 import os
-os.system('taskset -p %s' %os.getpid())
+#os.system('taskset -p %s' %os.getpid())
 
 RepeatDetector_loc=sys.argv[1]
 RepeatSummary_loc=sys.argv[2]

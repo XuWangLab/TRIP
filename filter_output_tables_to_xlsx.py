@@ -27,7 +27,7 @@ import pandas as pd
 import os
 import traceback
 import sys
-os.system('taskset -p %s' %os.getpid())
+#os.system('taskset -p %s' %os.getpid())
 
 filtered_tables_dir=sys.argv[1]
 rpt_reads_num_filter=float(sys.argv[2])

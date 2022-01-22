@@ -29,7 +29,7 @@ import sys
 import os
 import time
 import random
-os.system('taskset -p %s' %os.getpid())
+#os.system('taskset -p %s' %os.getpid())
 
 name=sys.argv[1]
 prj=sys.argv[2]
@@ -45,7 +45,7 @@ url_filter=sys.argv[9]
 ENA_record=str(name+"_"+prj+"_tsv.txt")
 print("module 2: downloading ",ENA_record)
 url=str("\"https://www.ebi.ac.uk/ena/portal/api/filereport?accession="+prj+"&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true\"")
-wget_cmd=str("wget "+url+" -O "+name_folder_dir+"/"+ENA_record)
+wget_cmd=str("wget --retry-connrefused -t 10  --timeout=300 -q -c "+url+" -O "+name_folder_dir+"/"+ENA_record)
 os.system(wget_cmd)
 
 ## parse the FTP locations
