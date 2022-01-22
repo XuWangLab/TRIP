@@ -24,6 +24,17 @@
 
 1. Download the code and store the code folder in someplace. ***Do not change the content in the folder***.
 
+2. `chmod -R 777 /path/to/TRIP` Try to run `RepeatDetector_v2` in ***TRIP***, if you see 
+```
+***********************************
+* RepeatDetector                  *
+* author: Yi Wang                 *
+* email:  godspeed_china@yeah.net *
+* date:   29/May/2018             *
+***********************************
+``` 
+rather than `pemission denied`, then you should be cool.
+
 # Basic usage (auto web-crawling > downloading > analyzing > filtering > output plots and tables)
 > python3 path/to/TRIP/TRIP.py --input path/to/TRIP/example_input.tsv --output ./ --process_num 100
 
