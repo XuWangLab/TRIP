@@ -54,6 +54,7 @@ In **example_input.tsv**, we have 2 samples to check. One is CARCR (Cariama cris
 
 ## output files
 ```
+test
 └── [4.0K Jan 23  0:14]  TRIP_results
     ├── [4.0K Jan 23  0:14]  barplots
     │?? ├── [376K Jan 23  0:14]  CARCR_percent_repeats_len_per_read.pdf
@@ -134,7 +135,7 @@ Firstly, run `module4.py`
 > ***TRIP*** take all reads as single end reads.
 
 Then, run `module5.py`
-> `python3 path/to/TRIP/module_5.py path/to/TRIP/cal_repeats_per_genome_and_percent_of_len_linux.py HARAX path/to/TRIP_results/CARCR parent_dir_of_TRIP_results/`
+> `python3 path/to/TRIP/module_5.py path/to/TRIP/cal_repeats_per_genome_and_percent_of_len_linux.py HARAX path/to/TRIP_results/CARCR parent_dir_of_TRIP_results/(which is test/ in this case)`
 
 > `cal_repeats_per_genome_and_percent_of_len_linux.py` will do some caculations and draw plots.
 
