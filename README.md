@@ -53,7 +53,59 @@ The **ASSEMBLY** column should be correct, otherwise ***TRIP*** cannot process c
 In **example_input.tsv**, we have 2 samples to check. One is CARCR (Cariama cristata), another is HARAX (Harmonia axyridis). For CARCR, the BIOPROJECT  is [PRJNA212889](https://www.ebi.ac.uk/ena/browser/view/PRJNA212889?show=reads), the ASSEMBLY is [GCA_000690535.1](https://www.ncbi.nlm.nih.gov/assembly/GCA_000690535.1) (GCF_000690535.1 also works). 
 
 ## output files
-
+```
+└── [4.0K Jan 23  0:14]  TRIP_results
+    ├── [4.0K Jan 23  0:14]  barplots
+    │?? ├── [376K Jan 23  0:14]  CARCR_percent_repeats_len_per_read.pdf
+    │?? ├── [377K Jan 23  0:14]  CARCR_percent_repeat_unit_in_sequences.pdf
+    │?? ├── [377K Jan 23  0:14]  CARCR_repeats_len_per_genome.pdf
+    │?? ├── [377K Jan 23  0:14]  CARCR_repeats_len_per_million_reads.pdf
+    │?? ├── [376K Jan 22 23:23]  HARAX_percent_repeats_len_per_read.pdf
+    │?? ├── [377K Jan 22 23:23]  HARAX_percent_repeat_unit_in_sequences.pdf
+    │?? ├── [377K Jan 22 23:23]  HARAX_repeats_len_per_genome.pdf
+    │?? └── [377K Jan 22 23:23]  HARAX_repeats_len_per_million_reads.pdf
+    ├── [4.0K Jan 23  0:12]  CARCR
+    │?? ├── [ 617 Jan 22 19:17]  CARCR_PRJNA212889_tsv.txt
+    │?? ├── [6.7M Jan 23  0:12]  CARCR.repeat
+    │?? ├── [651K Jan 23  0:12]  CARCR_repeatsummary.tsv
+    │?? ├── [  32 Jan 23  0:12]  CARCR.stat
+    │?? ├── [  90 Jan 23  0:12]  CRPG_input.tsv
+    │?? ├── [ 410 Jan 22 19:17]  ENA2URL.sh
+    │?? ├── [  10 Jan 23  0:03]  genome_size
+    │?? ├── [  32 Jan 23  0:02]  md5_log
+    │?? ├── [261M Jan 22 20:04]  SRR953484_1.fastq.gz
+    │?? ├── [1.0G Jan 22 22:34]  SRR953484_2.fastq.gz
+    │?? ├── [816M Jan 22 21:04]  SRR953485_1.fastq.gz
+    │?? ├── [1.5G Jan 22 23:42]  SRR953485_2.fastq.gz
+    │?? ├── [ 268 Jan 22 19:17]  url
+    │?? ├── [ 268 Jan 22 19:17]  url_filtered
+    │?? └── [ 209 Jan 22 19:17]  wget.sh
+    ├── [4.0K Jan 23  0:14]  filtered_tables
+    │?? ├── [ 73K Jan 23  0:14]  CARCR_output.csv
+    │?? └── [ 42K Jan 22 23:23]  HARAX_output.csv
+    ├── [4.0K Jan 22 23:22]  HARAX
+    │?? ├── [  90 Jan 22 23:22]  CRPG_input.tsv
+    │?? ├── [2.0G Jun  8  2020]  DRR100149_1.fastq.gz
+    │?? ├── [2.0G Jun  6  2020]  DRR100150_1.fastq.gz
+    │?? ├── [2.2G Jun  6  2020]  DRR100150_2.fastq.gz
+    │?? ├── [201M Jan 22 21:11]  DRR100152_2.fastq.gz
+    │?? ├── [ 410 Jan 22 19:17]  ENA2URL.sh
+    │?? ├── [   9 Jan 22 23:00]  genome_size
+    │?? ├── [1.1K Jan 22 19:17]  HARAX_PRJDB6162_tsv.txt
+    │?? ├── [ 16M Jan 22 23:22]  HARAX.repeat
+    │?? ├── [405K Jan 22 23:22]  HARAX_repeatsummary.tsv
+    │?? ├── [  32 Jan 22 23:22]  HARAX.stat
+    │?? ├── [  32 Jan 22 23:00]  md5_log
+    │?? ├── [ 536 Jan 22 19:17]  url
+    │?? ├── [ 268 Jan 22 19:17]  url_filtered
+    │?? └── [ 209 Jan 22 19:17]  wget.sh
+    ├── [4.0K Jan 23  0:14]  TR_candidates
+    │?? ├── [ 65K Jan 23  0:14]  CARCR_output.csv.0.filtered.xlsx
+    │?? ├── [ 43K Jan 23  0:14]  HARAX_output.csv.1.filtered.xlsx
+    │?? ├── [6.0K Jan 23  0:14]  TR_candidates.qualified.dominant.xlsx
+    │?? └── [5.9K Jan 23  0:14]  TR_candidates.qualified.xlsx
+    └── [ 932 Jan 23  0:14]  TRIP.log.csv
+```
 ### `TRIP_results/each_sample` : 
 - each sample has one independent folder.
 - `CARCR_PRJNA212889_tsv.txt` is the downloaded reads records file
@@ -76,13 +128,21 @@ In **example_input.tsv**, we have 2 samples to check. One is CARCR (Cariama cris
 Users need to understand the structure of ***TRIP***. Read **TRIP structure** to understand.
 
 Firstly, run `module4.py`
-> python3 path/to/TRIP/TRIP.py --input path/to/TRIP/example_input.tsv --output ./ --process_num 100
+> `python3 path/to/TRIP/module_4.py path/to/TRIP/RepeatDetector_v2 path/to/TRIP/RepeatSummary_v2 path/to/TRIP_results/CARCR/CARCR 1 25 16 path/to/TRIP_results/CARCR/SRR953484_2.fastq.gz path/to/TRIP_results/CARCR/SRR953485_2.fastq.gz path/to/TRIP_results/CARCR/SRR953484_1.fastq.gz path/to/TRIP_results/CARCR/SRR953485_1.fastq.gz path/to/TRIP_results/CARCR/CARCR_repeatsummary.tsv path/to/TRIP_results/CARCR/CARCR.repeat`
+
+> `1,25,16` are the -r,-R,-n parameters of RepeatDetector_v2
+> ***TRIP*** take all reads as single end reads.
 
 Then, run `module5.py`
-> python3 path/to/TRIP/TRIP.py --input path/to/TRIP/example_input.tsv --output ./ --process_num 100
+> `python3 path/to/TRIP/module_5.py path/to/TRIP/cal_repeats_per_genome_and_percent_of_len_linux.py HARAX path/to/TRIP_results/HARAX parent_dir_of_TRIP_results/`
+
+> `cal_repeats_per_genome_and_percent_of_len_linux.py` will do some caculations and draw plots.
 
 Finally, run `module6.py`
-> python3 path/to/TRIP/TRIP.py --input path/to/TRIP/example_input.tsv --output ./ --process_num 100
+> `python3 path/to/TRIP/module_6.py path/to/TRIP_results/filtered_tables 12000 0 0 4 0 0 10 0 0 0 0 0 0 4 0.5 0 0 3 999 path/to/TRIP_results/TR_candidates path/to/TRIP/filter_output_tables_to_xlsx.py`
+
+> `12000 0 0 4 0 0 10 0 0 0 0 0 0 4 0.5 0 0 3 999` are the parameters/threshould. Check module_6.py source code, or see ***TRIP*** help manual to understand.
+> `filter_output_tables_to_xlsx.py` to filter the results using 5-hard-cut-off and criteria 1.
 
 # TRIP structure
 ```
@@ -124,3 +184,7 @@ At beginning, you may observe no running via `htop` or other background-check co
 ***Can TRIP handle long sequencing reads?***
 
 We haven't tested it. But we offer `--skip_subreads`, which will let ***TRIP*** skip reads names containing "subreads". Usually, file names containing "subreads" means long sequencing reads.
+
+***TRIP didn't finish downloading the reads?***
+
+This is very common, because public database have internet limitation, which is beyond ***TRIP***'s scope. However, even with truncated reads file, ***TRIP*** ususally can still identify the correct TRM. For example, in the ***output file*** section above, our downloads also truncated, but ***TRIP*** still identified the **AACCT** in HARAX. On the other hand, you can still re-run the ***TRIP*** with `--continue True`, ***TRIP*** will continue from the truncated downloads.
