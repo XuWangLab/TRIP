@@ -109,13 +109,10 @@ for each thread:
     Process the repeatmaster output tables and store filtered tables into filtered_tables.
     Store barplots into barplots folder.
 
-    ## module 6
+## module 6
 Given the filtration parameters to filter the processed tables in processed_tables
 and generate the TR_candidates folder to store TR candidates.
 
-Add URL column to the log.
-Add GENOME_SIZE to the log.
-Save TRIP.log.csv
 ```
 We suggest users to read original code when needed.
 
