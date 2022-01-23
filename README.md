@@ -119,7 +119,7 @@ We suggest users to read original code when needed.
 # Q&A
 ***Why my TRIP seems not to be running?***
 
-At beginning, you may observe no running via `htop` or other background-check command, which is because TRIP is downloading files `tree path/to/TRIP_results to check`, the `wget` method built-in TRIP consumes neglectable computing resources.
+At beginning, you may observe no running via `htop` or other background-check command, which is because TRIP is downloading files. You can use `tree path/to/TRIP_results` to check files current status simutaneously, the `wget` method built-in TRIP consumes neglectable computing resources.
 
 ***Can TRIP handle long sequencing reads?***
 
