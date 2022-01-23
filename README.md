@@ -54,7 +54,7 @@ In **example_input.tsv**, we have 2 samples to check. One is CARCR (Cariama cris
 
 ## output files
 
-### `TRIP_results/CARCR` : 
+### `TRIP_results/each_sample` : 
 - each sample has one independent folder.
 - `CARCR_PRJNA212889_tsv.txt` is the downloaded reads records file
 - `CARCR.repeat CARCR.repeatsummary.tsv and CARCR.stat` are the ***RepeatMaster*** processed results 
