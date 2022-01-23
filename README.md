@@ -123,4 +123,4 @@ At beginning, you may observe no running via `htop` or other background-check co
 
 ***Can TRIP handle long sequencing reads?***
 
-We haven't tested it. But we offer `--skip_subreads`, which will let ***TRIP*** skip reads names containing "subreads".
+We haven't tested it. But we offer `--skip_subreads`, which will let ***TRIP*** skip reads names containing "subreads". Usually, file names containing "subreads" means long sequencing reads.
