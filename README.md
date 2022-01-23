@@ -123,6 +123,7 @@ test
 ### `TRIP_results/barplots`: 
 - barplots of 4 parameters which can be used for publication. 
 - ***NOTICE***, **AACCT** is equivalent to **TTAGG**, because DNA is reverse complementary pairing.
+- In example, ***TRIP*** didn't identify the TRM of CARCR, but from the barplots, we can see **AACCCT** is outstanding. Therefore, a great probability of **TTAGGG** as TRM. In such condition, users should finish downloading the reads files of CARCR and re-run ***TRIP***.
 
 # Local usuage (Who have local reads, do not want to use public data)
 ## command line
