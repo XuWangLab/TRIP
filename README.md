@@ -134,7 +134,7 @@ Firstly, run `module4.py`
 > ***TRIP*** take all reads as single end reads.
 
 Then, run `module5.py`
-> `python3 path/to/TRIP/module_5.py path/to/TRIP/cal_repeats_per_genome_and_percent_of_len_linux.py HARAX path/to/TRIP_results/HARAX parent_dir_of_TRIP_results/`
+> `python3 path/to/TRIP/module_5.py path/to/TRIP/cal_repeats_per_genome_and_percent_of_len_linux.py HARAX path/to/TRIP_results/CARCR parent_dir_of_TRIP_results/`
 
 > `cal_repeats_per_genome_and_percent_of_len_linux.py` will do some caculations and draw plots.
 
