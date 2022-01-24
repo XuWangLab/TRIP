@@ -107,6 +107,7 @@ test
     │?? └── [5.9K Jan 23  0:14]  TR_candidates.qualified.xlsx
     └── [ 932 Jan 23  0:14]  TRIP.log.csv
 ```
+The output files can be downloaded in [BOX](https://auburn.box.com/s/kuy0i0j9x0hr26uz730035xwexwb1s74)
 ### `TRIP_results/each_sample` : 
 - each sample has one independent folder.
 - `CARCR_PRJNA212889_tsv.txt` is the downloaded reads records file
