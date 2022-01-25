@@ -51,11 +51,11 @@ os.system(wget_cmd)
 ## parse the FTP locations
 cp_cmd=str("cp -t "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc)
 os.system(cp_cmd)
-print(cp_cmd)
+#print("module 2: ",cp_cmd)
 ## will generate url file under name-folder
 parse_cmd=str("bash "+name_folder_dir+"/ENA2URL.sh")
 os.system(parse_cmd)
-print(parse_cmd)
+#print("module 2: ",parse_cmd)
 
 ## filter the url file and generate url_filtered file under name-folder
 if skip_subreads=="True":
@@ -63,7 +63,7 @@ if skip_subreads=="True":
 elif skip_subreads=="False":
     skip_subreads=False
 else:
-    print("skip_subreads=",skip_subreads," is not in [True,False], change it to True")
+    print("module 2: skip_subreads=",skip_subreads," is not in [True,False], change it to True")
     skip_subreads=True
 url_file_dir=str(name_folder_dir+"/url")
 url_filtered_file_dir=str(name_folder_dir+"/url_filtered")
@@ -100,7 +100,7 @@ with open(url_file_dir,'r') as f:
                     for line in filtered_urls:
                         ff.write(line)
             else:
-                print("url_filter parameter error, need to be in [overwrite,append,remain]: ",url_filter)
+                print("module 2: url_filter parameter error, need to be in [overwrite,append,remain]: ",url_filter)
         else:
             # no original url_filtered_file_dir, write
             with open(url_filtered_file_dir,'w') as ff:
@@ -111,7 +111,7 @@ with open(url_file_dir,'r') as f:
 ## Download the FASTQ files to the name-folder
 wget_cmd=str("bash "+name_folder_dir+"/wget.sh")
 time.sleep(random.choice(range(2,20))) ## in case IP restriction
-print(wget_cmd)
+#print(wget_cmd)
 os.system(wget_cmd)
 
 

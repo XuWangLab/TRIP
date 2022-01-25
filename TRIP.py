@@ -43,8 +43,8 @@ Save TRIP.log.csv
 #================================== input =====================================
 1.input tsv file:
 NAME	BIOPROJECT	ASSEMBLY
-CHAVOC	PRJNA212867	GCA_000708025.2
-ACACHL	PRJNA212877	GCA_000695815.1
+CARCR	PRJNA212889	GCA_000690535.1
+HARAX	PRJDB6162	GCA_011033045.1
 
 2.path to repeatmaster
 
@@ -121,13 +121,16 @@ def getmd5sum(file_path):
 
     
 def module2to5(name,prj,ass,output_dir,current_script_dir,ENA2URL_loc,wget_loc,skip_subreads,downsample,continue_,url_filter,RepeatDetector_loc,RepeatSummary_loc,RepeatDetector_r,RepeatDetector_R,RepeatDetector_n,CRPG_loc):
+    print("###=============    %s-%s-%s is processing.    ==============###" % (name,prj,ass))
     sys.stdout.flush()
     name_folder_dir=str(output_dir+"/TRIP_results/"+name)  ## created in module 1
+    
     ## module 2 command
     module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
                      prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc+" "+\
                      skip_subreads+" "+downsample+" "+continue_+" "+url_filter)
     print("module 2 cmd: ",module_2_cmd)
+    sys.stdout.flush()
     os.system(module_2_cmd)
     ## check md5_log
     ## Check whether new files downloaded. If "no", then no need to re-run the module 3-5
@@ -167,7 +170,9 @@ def module2to5(name,prj,ass,output_dir,current_script_dir,ENA2URL_loc,wget_loc,s
     ## module 3 command
     module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
     print("module 3 cmd: ",module_3_cmd)
+    sys.stdout.flush()
     os.system(module_3_cmd)
+    
     ## module 4 command
     RepeatDetector_O=str(name_folder_dir+"/"+name)
     RepeatDetector_I_list=glob(name_folder_dir+"/*gz")
@@ -179,16 +184,19 @@ def module2to5(name,prj,ass,output_dir,current_script_dir,ENA2URL_loc,wget_loc,s
                      +" "+RepeatDetector_R+" "+RepeatDetector_n+" "+RepeatDetector_I\
                      +" "+RepeatSummary_O+" "+RepeatSummary_I)
     print("module 4 cmd: ",module_4_cmd)
+    sys.stdout.flush()
     os.system(module_4_cmd)
+    
     ## module 5 command
     module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
     print("module 5 cmd: ",module_5_cmd)
+    sys.stdout.flush()
     os.system(module_5_cmd)
     
     ## trick to actually acquire cpu cores
-    j=0
-    for i in range(1000000000):
-        j = i**2
+    #j=0
+    #for i in range(1000000000):
+    #    j = i**2
 
 if __name__=='__main__':
     set_start_method("spawn")
@@ -385,7 +393,7 @@ if __name__=='__main__':
 
     ## module 1 command
     module_1_cmd=str("python3 "+current_script_dir+"/module_1.py "+infile_dir+" "+output_dir)
-    print("module 1: ",module_1_cmd)
+    print("module 1 cmd: ",module_1_cmd)
     os.system(module_1_cmd)
 
     ## multi-process
@@ -398,8 +406,8 @@ if __name__=='__main__':
         prj=name_prj_ass[1]
         ass=name_prj_ass[2]
         sys.stdout.flush()
-        time.sleep(5*count)  ## in case NCBI API restriction
-        print("###=============    %s-%s-%s is processing.    ==============###" % (name,prj,ass))
+        time.sleep(5)  ## in case NCBI API restriction
+        
         count+=1
         #x1 = pool.apply_async(long_time_task, args=(count,current_script_dir,))
         #x1.get()
@@ -436,7 +444,8 @@ if __name__=='__main__':
                     max_qualified_num+" "+\
                     TR_candidates_dir+" "+\
                     FOT2X_loc)
-    print("module 6: ",module_6_cmd)
+    print("module 6 cmd: ",module_6_cmd)
+    sys.stdout.flush()
     os.system(module_6_cmd)
     ## Add URL column to the log.
     ## Add GENOME_SIZE to the log.

@@ -43,12 +43,12 @@ RepeatSummary_I=sys.argv[-1]
 RepeatDetector_cmd=str(RepeatDetector_loc+" "+RepeatDetector_O+" "+RepeatDetector_I\
                        +" -r "+RepeatDetector_r+" -R "+RepeatDetector_R+" -n "+\
                        RepeatDetector_n)
-print("module 4: ",RepeatDetector_cmd)
+print("module 4: RepeatDetector_cmd: ",RepeatDetector_cmd)
 os.system(RepeatDetector_cmd)
 
-print("RepeatSummary_loc: ",RepeatSummary_loc)
-print("RepeatSummary_O: ",RepeatSummary_O)
-print("RepeatSummary_I: ",RepeatSummary_I)
+#print("RepeatSummary_loc: ",RepeatSummary_loc)
+#print("RepeatSummary_O: ",RepeatSummary_O)
+#print("RepeatSummary_I: ",RepeatSummary_I)
 RepeatSummary_cmd=str(RepeatSummary_loc+" "+RepeatSummary_O+" "+RepeatSummary_I)
-print("module 4: ",RepeatSummary_cmd)
+print("module 4: RepeatSummary_cmd: ",RepeatSummary_cmd)
 os.system(RepeatSummary_cmd)

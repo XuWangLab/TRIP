@@ -25,7 +25,7 @@ SUSSC,151,693665606,42.36,2472461935
 python3  current_script_dir/module_5.py CRPG_loc name name_folder_dir
 ## Cal_Repeats_Per_Genome_and_Percent_of_Len_Linux.py will automatically find 
 ## the name_repeatsummary.tsv file in the name_folder_dir given the CRPG_input_df.tsv
-python3 Cal_Repeats_Per_Genome_and_Percent_of_Len_Linux.py name_folder_dir CRPG_input_df.tsv output_tables output_figs
+python3 cal_repeats_per_genome_and_percent_of_len_linux.py.py name_folder_dir CRPG_input_df.tsv output_tables output_figs
 #================================== warning ===================================
 
 ####=======================================================================####

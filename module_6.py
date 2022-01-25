@@ -75,7 +75,7 @@ FOT2X_cmd=str("python3 "+FOT2X_loc+" "+filtered_tables_dir+" "+\
                 str(best_candidate_enrichment)+" "+\
                 str(max_qualified_num_filter)+" "+\
                 TR_candidates_dir)
-print(FOT2X_cmd)
+print("module 6: ",FOT2X_cmd)
 os.system(FOT2X_cmd)
 
 
