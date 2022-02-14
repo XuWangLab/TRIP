@@ -138,7 +138,7 @@ Firstly, run `module4.py`
 > `1,25,16` are the -r,-R,-n parameters of RepeatDetector_v2
 > ***TRIP*** take all reads as single end reads.
 
-Then, run `module5.py`
+Then, perpare the content in path/to/TRIP_results/CARCR folder. To know which content are needed, please check the  [BOX](https://auburn.box.com/s/kuy0i0j9x0hr26uz730035xwexwb1s74). Then  run `module5.py`
 > `python3 path/to/TRIP/module_5.py path/to/TRIP/cal_repeats_per_genome_and_percent_of_len_linux.py HARAX path/to/TRIP_results/CARCR parent_dir_of_TRIP_results/(which is test/ in this case)`
 
 > `cal_repeats_per_genome_and_percent_of_len_linux.py` for caculations and plots.
