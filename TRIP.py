@@ -397,6 +397,7 @@ if __name__=='__main__':
     os.system(module_1_cmd)
 
     ## multi-process
+    process_num = len(name_prj_ass_list) if len(name_prj_ass_list) < int(process_num) else int(process_num)
     print("TRIP is using {} process.".format(int(process_num)))
 
     pool=Pool(int(process_num))
