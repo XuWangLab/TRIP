@@ -92,6 +92,7 @@ from multiprocessing import get_context
 from multiprocessing import Pool
 from multiprocessing import set_start_method
 import hashlib
+import traceback
 
 #os.system("taskset -p 0xff %d" % os.getpid())
 
@@ -121,83 +122,89 @@ def getmd5sum(file_path):
 
     
 def module2to5(name,prj,ass,output_dir,current_script_dir,ENA2URL_loc,wget_loc,skip_subreads,downsample,continue_,url_filter,RepeatDetector_loc,RepeatSummary_loc,RepeatDetector_r,RepeatDetector_R,RepeatDetector_n,CRPG_loc):
-    print("###=============    %s-%s-%s is processing.    ==============###" % (name,prj,ass))
-    sys.stdout.flush()
-    name_folder_dir=str(output_dir+"/TRIP_results/"+name)  ## created in module 1
-    
-    ## module 2 command
-    module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
-                     prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc+" "+\
-                     skip_subreads+" "+downsample+" "+continue_+" "+url_filter)
-    print("module 2 cmd: ",module_2_cmd)
-    sys.stdout.flush()
-    os.system(module_2_cmd)
-    ## check md5_log
-    ## Check whether new files downloaded. If "no", then no need to re-run the module 3-5
-    md5_log_loc=str(name_folder_dir+"/md5_log")
-    if os.path.exists(md5_log_loc):
-        print(name," md5_log exits.")
-        newest_gz=findnewestgz(name_folder_dir)
-        try:
-            md5sum=getmd5sum(newest_gz)
-            #print("md5sum: ",md5sum)
-        except:
-            print("Unexpected error. Cannot get md5 value of %s. Skip." % (name))
-            return
-        with open(md5_log_loc,'r') as f:
-            #print("reading old md5_log.")
-            old_md5sum=str(f.readline())
-        if md5sum!=old_md5sum:
-            #print("update new md5_log.")
-            with open(md5_log_loc,'w') as f:
-                f.write(str(md5sum))
+    try:
+        print("###=============    %s-%s-%s is processing.    ==============###" % (name,prj,ass))
+        sys.stdout.flush()
+        name_folder_dir=str(output_dir+"/TRIP_results/"+name)  ## created in module 1
+        
+        ## module 2 command
+        module_2_cmd=str("python3 "+current_script_dir+"/module_2.py "+name+" "+\
+                         prj+" "+name_folder_dir+" "+ENA2URL_loc+" "+wget_loc+" "+\
+                         skip_subreads+" "+downsample+" "+continue_+" "+url_filter)
+        print("module 2 cmd: ",module_2_cmd)
+        sys.stdout.flush()
+        os.system(module_2_cmd)
+        ## check md5_log
+        ## Check whether new files downloaded. If "no", then no need to re-run the module 3-5
+        md5_log_loc=str(name_folder_dir+"/md5_log")
+        if os.path.exists(md5_log_loc):
+            print(name," md5_log exits.")
+            newest_gz=findnewestgz(name_folder_dir)
+            try:
+                md5sum=getmd5sum(newest_gz)
+                #print("md5sum: ",md5sum)
+            except:
+                print("Unexpected error . Cannot get md5 value of %s. Skip." % (name))
+                return
+            with open(md5_log_loc,'r') as f:
+                #print("reading old md5_log.")
+                old_md5sum=str(f.readline())
+            if md5sum!=old_md5sum:
+                #print("update new md5_log.")
+                with open(md5_log_loc,'w') as f:
+                    f.write(str(md5sum))
+            else:
+                print("%s gz files have no change. Skip." % (name))
+                return
         else:
-            print("%s gz files have no change. Skip." % (name))
-            return
-    else:
-        print(name," md5_log doesn't exist.")
-        newest_gz=findnewestgz(name_folder_dir)
-        #print("newest gz: ",newest_gz)
-        if newest_gz==0:
-            print("%s has no downloaded gz files, skip." % (name))
-            return
-        else:
-            md5sum=getmd5sum(newest_gz)
-            #print("write new md5_log.")
-            with open(md5_log_loc,'w') as f:
-                f.write(str(md5sum))
+            print(name," md5_log doesn't exist.")
+            newest_gz=findnewestgz(name_folder_dir)
+            #print("newest gz: ",newest_gz)
+            if newest_gz==0:
+                print("%s has no downloaded gz files, skip." % (name))
+                return
+            else:
+                md5sum=getmd5sum(newest_gz)
+                #print("write new md5_log.")
+                with open(md5_log_loc,'w') as f:
+                    f.write(str(md5sum))
 
-    ## module 3 command
-    module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
-    print("module 3 cmd: ",module_3_cmd)
-    sys.stdout.flush()
-    os.system(module_3_cmd)
-    
-    ## module 4 command
-    RepeatDetector_O=str(name_folder_dir+"/"+name)
-    RepeatDetector_I_list=glob(name_folder_dir+"/*gz")
-    RepeatDetector_I=" ".join(RepeatDetector_I_list)
-    RepeatSummary_O=str(name_folder_dir+"/"+name+"_repeatsummary.tsv")
-    RepeatSummary_I=str(name_folder_dir+"/"+name+".repeat")
-    module_4_cmd=str("python3 "+current_script_dir+"/module_4.py "+RepeatDetector_loc\
-                     +" "+RepeatSummary_loc+" "+RepeatDetector_O+" "+RepeatDetector_r\
-                     +" "+RepeatDetector_R+" "+RepeatDetector_n+" "+RepeatDetector_I\
-                     +" "+RepeatSummary_O+" "+RepeatSummary_I)
-    print("module 4 cmd: ",module_4_cmd)
-    sys.stdout.flush()
-    os.system(module_4_cmd)
-    
-    ## module 5 command
-    module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
-    print("module 5 cmd: ",module_5_cmd)
-    sys.stdout.flush()
-    os.system(module_5_cmd)
-    
-    ## trick to actually acquire cpu cores
-    #j=0
-    #for i in range(1000000000):
-    #    j = i**2
-
+        ## module 3 command
+        module_3_cmd=str("python3 "+current_script_dir+"/module_3.py "+ass+" "+name_folder_dir)
+        print("module 3 cmd: ",module_3_cmd)
+        sys.stdout.flush()
+        os.system(module_3_cmd)
+        
+        ## module 4 command
+        RepeatDetector_O=str(name_folder_dir+"/"+name)
+        RepeatDetector_I_list=glob(name_folder_dir+"/*gz")
+        RepeatDetector_I=" ".join(RepeatDetector_I_list)
+        RepeatSummary_O=str(name_folder_dir+"/"+name+"_repeatsummary.tsv")
+        RepeatSummary_I=str(name_folder_dir+"/"+name+".repeat")
+        module_4_cmd=str("python3 "+current_script_dir+"/module_4.py "+RepeatDetector_loc\
+                         +" "+RepeatSummary_loc+" "+RepeatDetector_O+" "+RepeatDetector_r\
+                         +" "+RepeatDetector_R+" "+RepeatDetector_n+" "+RepeatDetector_I\
+                         +" "+RepeatSummary_O+" "+RepeatSummary_I)
+        print("module 4 cmd: ",module_4_cmd)
+        sys.stdout.flush()
+        os.system(module_4_cmd)
+        
+        ## module 5 command
+        module_5_cmd=str("python3 "+current_script_dir+"/module_5.py "+CRPG_loc+" "+name+" "+name_folder_dir+" "+output_dir)
+        print("module 5 cmd: ",module_5_cmd)
+        sys.stdout.flush()
+        os.system(module_5_cmd)
+        
+        ## trick to actually acquire cpu cores
+        #j=0
+        #for i in range(1000000000):
+        #    j = i**2
+    except Exception as e:
+        print("Exception in %s-%s-%s process." % (name,prj,ass))
+        traceback.print_exc()
+        print()
+        raise e
+        
 if __name__=='__main__':
     set_start_method("spawn")
     
